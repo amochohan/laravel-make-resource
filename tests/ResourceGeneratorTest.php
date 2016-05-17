@@ -1,8 +1,6 @@
 <?php
 
 use App\Console\Commands\GenerateResource;
-use Illuminate\Console\Command;
-use Symfony\Component\Console\Tester\CommandTester;
 
 class ResourceGeneratorTest extends TestCase
 {
