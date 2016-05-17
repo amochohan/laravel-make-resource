@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Console\Command;
+use Symfony\Component\Console\Tester\CommandTester;
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**
@@ -21,5 +24,43 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
         return $app;
+    }
+
+    public function seeFileWasCreated($filename)
+    {
+        $this->assertTrue(file_exists($filename));
+    }
+
+    public function removeCreatedFile($filename)
+    {
+        unlink($filename);
+    }
+
+    /**
+     * @param $class Command class to be called.
+     * @param array $parameters
+     * @return CommandTester
+     */
+    public function runArtisanCommand($class, $parameters = [])
+    {
+        $command = $this->app->make($class);
+
+        $command->setLaravel($this->app->getInstance());
+
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute($parameters);
+
+        return $commandTester;
+    }
+
+    public function seeInConsoleOutput($text, $console)
+    {
+        $this->assertContains($text, $console->getDisplay());
+    }
+
+    public function seeInFile($text, $file)
+    {
+        $this->assertContains($text, file_get_contents($file), 'The file does not contain ' . $text);
     }
 }
