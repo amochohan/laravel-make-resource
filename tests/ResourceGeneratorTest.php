@@ -350,6 +350,25 @@ class ResourceGeneratorTest extends \TestCase
 
     }
 
+    /** @test */
+    public function it_creates_a_model_factory_for_the_model()
+    {
+        // Given there is a model called 'Elephant'
+        $model = 'Elephant';
+
+        // When I create a resource for Elephant.
+        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
+
+        // Then a model factory is created for Elephant.
+        $this->seeInFile(
+            file_get_contents(base_path('tests/stubs/factory.stub')),
+            file_get_contents(database_path('factories/ModelFactory.php'))
+        );
+
+        $this->removeCreatedFile(app_path('Snake.php'));
+        $this->removeCreatedFile(database_path('/migrations/date_create_snakes_table.php'));
+        $this->resetRoutes();
+    }
 
     private function resetRoutes()
     {
