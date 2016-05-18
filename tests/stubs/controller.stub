@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Tiger;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+
+class TigerController extends Controller
+{
+    /**
+     * @var Tiger
+     */
+    private $tiger;
+
+    /**
+     * @param Tiger $tiger
+     */
+    public function __construct(Tiger $tiger)
+    {
+        $this->tiger = $tiger;
+    }
+
+    /**
+     * Return all Tigers.
+     *
+     * @return mixed
+     */
+    public function index()
+    {
+        return $tigers = $this->tiger->paginate();
+
+        // return view('tiger.index', compact('tigers'));
+    }
+
+    /**
+     * Display a given Tiger.
+     *
+     * @param int $id Tiger identifier
+     * @return mixed
+     */
+    public function show($id)
+    {
+        return $tiger = $this->tiger->findOrFail($id);
+
+        // return view('tiger.show', compact('tiger'));
+    }
+
+    /**
+     * Display the form to edit an existing Tiger instance.
+     *
+     * @param int $id Tiger identifier
+     */
+    public function edit($id)
+    {
+        $tiger = $this->tiger->findOrFail($id);
+
+        // return view('tiger.edit', compact('tiger'));
+    }
+
+    /**
+     * Update an existing Tiger instance.
+     *
+     * @param Request $request
+     */
+    public function update(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the form to create a new Tiger.
+     */
+    public function create()
+    {
+        // return view('tiger.create');
+    }
+
+    /**
+     * Store a new Tiger.
+     *
+     * @param Request $request
+     */
+    public function store(Request $request)
+    {
+        // $created = $this->tiger->create($request->all());
+
+        // return redirect()->route('tiger.show')->with(['id' => $created->id]);
+    }
+
+}

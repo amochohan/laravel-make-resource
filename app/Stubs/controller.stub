@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\MyModelClass;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+
+class MyModelClassController extends Controller
+{
+    /**
+     * @var MyModelClass
+     */
+    private $myModelInstance;
+
+    /**
+     * @param MyModelClass $myModelInstance
+     */
+    public function __construct(MyModelClass $myModelInstance)
+    {
+        $this->myModelInstance = $myModelInstance;
+    }
+
+    /**
+     * Return all MyModelClasss.
+     *
+     * @return mixed
+     */
+    public function index()
+    {
+        return $myModelInstances = $this->myModelInstance->paginate();
+
+        // return view('template.index', compact('myModelInstances'));
+    }
+
+    /**
+     * Display a given MyModelClass.
+     *
+     * @param int $id MyModelClass identifier
+     * @return mixed
+     */
+    public function show($id)
+    {
+        return $myModelInstance = $this->myModelInstance->findOrFail($id);
+
+        // return view('template.show', compact('myModelInstance'));
+    }
+
+    /**
+     * Display the form to edit an existing MyModelClass instance.
+     *
+     * @param int $id MyModelClass identifier
+     */
+    public function edit($id)
+    {
+        $myModelInstance = $this->myModelInstance->findOrFail($id);
+
+        // return view('template.edit', compact('myModelInstance'));
+    }
+
+    /**
+     * Update an existing MyModelClass instance.
+     *
+     * @param Request $request
+     */
+    public function update(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the form to create a new MyModelClass.
+     */
+    public function create()
+    {
+        // return view('template.create');
+    }
+
+    /**
+     * Store a new MyModelClass.
+     *
+     * @param Request $request
+     */
+    public function store(Request $request)
+    {
+        // $created = $this->myModelInstance->create($request->all());
+
+        // return redirect()->route('template.show')->with(['id' => $created->id]);
+    }
+
+}

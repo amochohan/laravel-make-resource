@@ -1,9 +1,18 @@
 <?php
 
-namespace NAMESPACE_PLACEHOLDER;
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
 
 class NAME_PLACEHOLDER extends Model
 {
+    /**
+     * The attributes that are used for migration generation.
+     *
+     * @array
+     */
+    protected $migrationAttributes = MIGRATION_ATTRIBUTES_PLACEHOLDER;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -17,4 +26,14 @@ class NAME_PLACEHOLDER extends Model
      * @var array
      */
     protected $hidden = HIDDEN_PLACEHOLDER;
+
+    /**
+     * Return the attributes used to generate a migration.
+     *
+     * @return array
+     */
+    public function migrationAttributes()
+    {
+        return $this->migrationAttributes;
+    }
 }

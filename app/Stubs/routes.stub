@@ -1,0 +1,21 @@
+/*
+|--------------------------------------------------------------------------
+| |MODEL_TITLE| Routes
+|--------------------------------------------------------------------------
+|
+| Here are all routes relating to the |MODEL_TITLE| model. A restful routing naming
+| convention has been used, to allow index, show, edit, update, create and
+| store actions on the |MODEL_TITLE| model.
+|
+*/
+
+Route::group(['prefix' => '|MODEL_NAME|'], function () {
+
+    Route::get('/',         ['as' => '|MODEL_NAME|.index',    'uses' => '|CONTROLLER_NAME|@index']);
+    Route::get('/{id}',     ['as' => '|MODEL_NAME|.show',     'uses' => '|CONTROLLER_NAME|@show']);
+    Route::get('/{id}/edit',['as' => '|MODEL_NAME|.edit',     'uses' => '|CONTROLLER_NAME|@edit']);
+    Route::post('/update',  ['as' => '|MODEL_NAME|.update',   'uses' => '|CONTROLLER_NAME|@update']);
+    Route::get('/create',   ['as' => '|MODEL_NAME|.create',   'uses' => '|CONTROLLER_NAME|@create']);
+    Route::get('/store',    ['as' => '|MODEL_NAME|.store',    'uses' => '|CONTROLLER_NAME|@store']);
+
+});

@@ -1,0 +1,4 @@
+$table->string('name', 100);
+$table->integer('age')->unsigned()->index();
+$table->string('colour')->nullable();
+$table->string('nickname');

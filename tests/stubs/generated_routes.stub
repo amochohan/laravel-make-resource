@@ -1,0 +1,21 @@
+/*
+|--------------------------------------------------------------------------
+| Snake Routes
+|--------------------------------------------------------------------------
+|
+| Here are all routes relating to the Snake model. A restful routing naming
+| convention has been used, to allow index, show, edit, update, create and
+| store actions on the Snake model.
+|
+*/
+
+Route::group(['prefix' => 'snake'], function () {
+
+    Route::get('/',         ['as' => 'snake.index',    'uses' => 'SnakeController@index']);
+    Route::get('/{id}',     ['as' => 'snake.show',     'uses' => 'SnakeController@show']);
+    Route::get('/{id}/edit',['as' => 'snake.edit',     'uses' => 'SnakeController@edit']);
+    Route::post('/update',  ['as' => 'snake.update',   'uses' => 'SnakeController@update']);
+    Route::get('/create',   ['as' => 'snake.create',   'uses' => 'SnakeController@create']);
+    Route::get('/store',    ['as' => 'snake.store',    'uses' => 'SnakeController@store']);
+
+});

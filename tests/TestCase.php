@@ -33,7 +33,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     public function removeCreatedFile($filename)
     {
-        unlink($filename);
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
     }
 
     /**
@@ -63,4 +65,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         $this->assertContains($text, file_get_contents($file), 'The file does not contain ' . $text);
     }
+
+    public function removeWhiteSpace($text)
+    {
+        return str_replace([' ', "\r", "\n", "\r\n", "\t"], '', $text);
+    }
+
 }
