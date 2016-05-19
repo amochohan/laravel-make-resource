@@ -13,7 +13,7 @@ install:
   - composer install
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 env:
   - APP_ENV=testing
