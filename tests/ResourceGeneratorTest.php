@@ -7,6 +7,20 @@ use Illuminate\Console\Command;
 use Orchestra\Testbench\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
+function app_path($suffix)
+{
+    return __DIR__ . '/generated/app' . (starts_with($suffix, '/') ? $suffix : '/' . $suffix);
+}
+
+function database_path($suffix)
+{
+    return __DIR__ . '/generated/database' . (starts_with($suffix, '/') ? $suffix : '/' . $suffix);
+}
+function base_path($suffix)
+{
+    return __DIR__ . '/../' . (starts_with($suffix, '/') ? $suffix : '/' . $suffix);
+}
+
 function date($format)
 {
     return 'date';
