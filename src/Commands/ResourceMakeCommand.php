@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Composer;
 use Illuminate\Filesystem\Filesystem;
 
-class GenerateResource extends Command
+class ResourceMakeCommand extends Command
 {
     /**
      * The name and signature of the console command.
