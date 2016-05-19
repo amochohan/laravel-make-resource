@@ -1,37 +1,66 @@
 # Laravel artisan make:resource command
 
+This package adds the ```php artisan make:resource command```, allowing 
+you to:
+
+> Generate a model, set its attributes, create a migration, controller, 
+routes and model factory in a single easy to use command.
+
+This package serves as a way of very quickly getting an idea off the 
+ground, reducing the time you need to spend setting up various parts 
+of your application so that you can concentrate on the complexity.
+
+## Why use this package?
+
 When starting a new project, typically we'll begin by creating a new
 model, and then going into that model and defining its fillable attributes.
 Next, we'll set up a migration, and again define which columns the table 
-should hold. Next we generate a controller, and add methods for ```index```, 
+should hold. 
+
+Next we generate a controller, and add methods for ```index```, 
 ```show```, ```edit```, ```update```, ```create```, and ```store``` and 
-finally open up the routes.php file to set up endpoints.
+finally open up the routes.php file to set up endpoints that relate to the 
+methods in the controller.
+
+If you practice test-driven development, or write automated tests, you'll
+then need to create a model factory and again define the same attributes.
 
 I found myself going through the same long winded process time and time again,
-so decided to build a single command which can generate:
+so decided to build a single command which can:
 
-* A model
-* Set fillable and hidden attributes
-* Generate a migration, with column definitions
-* Build a restful controller
-* Add the corresponding restful routes
-* Create a model factory
+* Create a model
+* Set its fillable and hidden attributes
+* Generate a migration, with column definitions based on the model
+* Build a restful controller, with the model imported
+* Add the corresponding restful routes namespaced under the model name
+* A model factory, with the same attributes and sensible faker dummy data 
 
 ## Installation
 
-Register the command class in app\Console\Kernel.php by adding:
+Install MakeResource through Composer.
 
-    Commands\GenerateResource::class,
+    "require": {
+        "drawmyattention/laravel-make-resource": "~1.0"
+    }
     
-to the ```$commands``` array.    
+Next, update your ```config/app.php``` to add the included service provider
+to your ```providers``` array:
+
+    'providers' => [
+        // other providers
+        DrawMyAttention\ResourceGenerator\ResourceGeneratorServiceProvider::class,
+    ];
 
 
+And you're good to go.
 
 ## Using the generator
 
-Simply run ```php artisan make:resource [ModelName] "attributes"```
+From the command line, run: 
 
-For example, to create a new ```Animal``` controller:
+    php artisan make:resource ModelName "attributes"
+
+For the simplest example, let's create a new ```Animal``` resource:
 
     php artisan make:resource Animal
     
@@ -43,20 +72,22 @@ This will create the following:
 
 as well as appending to:
 
-* database\factories\ModelFactory.php
 * app\Http\routes.php
+* database\factories\ModelFactory.php
+
+## Defining model attributes
 
 It's also possible to provide a pipe-separated list of attributes 
-for the model.
+for the model. For example:
 
     php artisan make:resource Animal "name:string,fillable,100,index|legs:integer,fillable,unsigned|colour|owner:hidden"
 
 The convention to use when passing arguments is, simply a pipe 
 separated list: 
 
-[attribute name]:[comma separated properties]
+> [attribute name]:[comma separated properties]
 
-The order of the properties is not important.
+The order of the properties is *not* important.
 
 If you specify either ```fillable``` or ```hidden```, the property will 
 be set accordingly. If neither is provided, the property is not added to 
@@ -315,3 +346,23 @@ various places, so rather conveniently, the model factory is
 generated automatically, the corresponding faker data is added 
 to each property. Nice!
  
+## Limitations
+ 
+Currently, the package assumes your application lives in the ```App```
+namespace, though a future update will make this more flexible.
+
+The way that Faker association in model factories is implemented, 
+is not really optimal - but it's a good starting point. Feel free to 
+fork and submit a PR. 
+ 
+## Running tests 
+
+A full test suite is included. To execute the tests, from the 
+package directory:
+
+    vendor/bin/phpunit tests/ResourceGeneratorTest.php
+
+## Contributing
+
+If you find a bug, or have ideas for an improvement, please submit a 
+pull-request, backed by the relevant unit tests. 
