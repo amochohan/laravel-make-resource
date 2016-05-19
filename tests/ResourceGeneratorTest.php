@@ -3,14 +3,31 @@
 namespace DrawMyAttention\ResourceGenerator\Commands;
 
 use Illuminate\Support\Str;
+use Illuminate\Console\Command;
+use Orchestra\Testbench\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 function date($format)
 {
     return 'date';
 }
 
-class ResourceGeneratorTest extends \TestCase
+class ResourceGeneratorTest extends TestCase
 {
+    /**
+     * Get package service providers.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @return array
+     */
+    protected function getPackageProviders($app)
+    {
+        return [
+            'DrawMyAttention\ResourceGenerator\ResourceGeneratorServiceProvider',
+        ];
+    }
+
     /** @test */
     public function it_generates_a_new_model()
     {
@@ -372,5 +389,49 @@ class ResourceGeneratorTest extends \TestCase
         return $instance;
     }
 
+    public function seeFileWasCreated($filename)
+    {
+        $this->assertTrue(file_exists($filename));
+    }
+
+    public function removeCreatedFile($filename)
+    {
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+    }
+
+    /**
+     * @param $class Command class to be called.
+     * @param array $parameters
+     * @return CommandTester
+     */
+    public function runArtisanCommand($class, $parameters = [])
+    {
+        $command = $this->app->make($class);
+
+        $command->setLaravel($this->app->getInstance());
+
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute($parameters);
+
+        return $commandTester;
+    }
+
+    public function seeInConsoleOutput($text, $console)
+    {
+        $this->assertContains($text, $console->getDisplay());
+    }
+
+    public function seeInFile($text, $file)
+    {
+        $this->assertContains($text, file_get_contents($file), 'The file does not contain ' . $text);
+    }
+
+    public function removeWhiteSpace($text)
+    {
+        return str_replace([' ', "\r", "\n", "\r\n", "\t"], '', $text);
+    }
 
 }
