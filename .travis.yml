@@ -1,0 +1,19 @@
+language: php
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+  - nightly
+
+before_script:
+  - composer self-update
+
+install:
+  - composer install
+
+script:
+  - vendor/bin/phpunit
+
+env:
+  - APP_ENV=testing
