@@ -365,4 +365,4 @@ package directory:
 ## Contributing
 
 If you find a bug, or have ideas for an improvement, please submit a 
-pull-request, backed by the relevant unit tests. 
+pull-request, backed by the relevant unit tests.
