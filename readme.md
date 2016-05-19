@@ -1,5 +1,7 @@
 # Laravel artisan make:resource command
 
+[![Build Status](https://travis-ci.org/drawmyattention/laravel-make-resource.svg?branch=master)](https://travis-ci.org/drawmyattention/laravel-make-resource)
+
 This package adds the ```php artisan make:resource command```, allowing 
 you to:
 
