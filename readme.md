@@ -1,6 +1,6 @@
 # Laravel artisan make:resource command
 
-[![Build Status](https://travis-ci.org/drawmyattention/laravel-make-resource.svg?branch=master)](https://travis-ci.org/drawmyattention/laravel-make-resource)
+[![Build Status](https://travis-ci.org/drawmyattention/laravel-make-resource.svg?branch=master)](https://travis-ci.org/drawmyattention/laravel-make-resource) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/drawmyattention/laravel-make-resource/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/drawmyattention/laravel-make-resource/?branch=master) [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](http://www.opensource.org/licenses/MIT)
 
 This package adds the ```php artisan make:resource command```, allowing 
 you to:
