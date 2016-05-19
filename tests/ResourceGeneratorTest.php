@@ -14,17 +14,14 @@ class ResourceGeneratorTest extends \TestCase
     /** @test */
     public function it_generates_a_new_model()
     {
-        // When I run php artisan make:resource Animal
-        $this->artisan('make:resource', ['name' => 'Animal']);
+        // When I run php artisan make:resource Lion
+        $this->artisan('make:resource', ['name' => 'Lion']);
 
         // Then I see a new Model has been created in the App namespace
         // And it has the correct name
-        $this->seeFileWasCreated(app_path('/Animal.php'));
+        $this->seeFileWasCreated(app_path('/Lion.php'));
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path('Animal.php'));
-        $this->removeCreatedFile(database_path('migrations/date_create_animals_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles('Lion');
     }
 
     /** @test */
@@ -39,10 +36,7 @@ class ResourceGeneratorTest extends \TestCase
         // Then I see an error
         $this->seeInConsoleOutput('Model already exists!', $console);
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path('Animal.php'));
-        $this->removeCreatedFile(database_path('migrations/date_create_animals_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles('Animal');
     }
 
     /** @test */
@@ -54,28 +48,22 @@ class ResourceGeneratorTest extends \TestCase
         // Then the model is created and the model has the correct class name
         $this->seeInFile('class Animal', app_path('/Animal.php'));
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path('Animal.php'));
-        $this->removeCreatedFile(database_path('migrations/date_create_animals_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles('Animal');
     }
 
     /** @test */
     public function it_creates_a_model_that_can_be_instantiated()
     {
-        $class = 'Animal';
+        $model = 'Animal';
 
         // When I create a new model called 'Animal'.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $class]);
+        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
 
         // Then I can instantiate the created Animal model
-        $class = 'App\\' . $class;
+        $class = 'App\\' . $model;
         $this->assertInstanceOf('App\\Animal', new $class);
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path('Animal.php'));
-        $this->removeCreatedFile(database_path('migrations/date_create_animals_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
@@ -110,7 +98,7 @@ class ResourceGeneratorTest extends \TestCase
     /** @test */
     public function it_accepts_attributes_which_are_saved_to_the_model()
     {
-        $model = $this->generateRandomClassName();
+        $model = 'Koala';
 
         // When I create a new model called 'Animal'.
         $this->runArtisanCommand(GenerateResource::class, [
@@ -129,16 +117,13 @@ class ResourceGeneratorTest extends \TestCase
 
         ], $instance->migrationAttributes());
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path($model . '.php'));
-        $this->removeCreatedFile(database_path('migrations/date_create_'. strtolower(Str::plural($model)).'_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
     public function it_adds_attributes_that_are_tagged_as_fillable_to_the_fillable_attributes_array()
     {
-        $model = $this->generateRandomClassName();
+        $model = 'Penguin';
 
         // When I create a new model called 'Animal'.
         $this->runArtisanCommand(GenerateResource::class, [
@@ -153,16 +138,13 @@ class ResourceGeneratorTest extends \TestCase
             'name', 'age'
         ], $instance->getFillable());
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path($model . '.php'));
-        $this->removeCreatedFile(database_path('migrations/date_create_'. strtolower(Str::plural($model)).'_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
     public function it_adds_attributes_that_are_tagged_as_hidden_to_the_hidden_attributes_array()
     {
-        $model = $this->generateRandomClassName();
+        $model = 'Dog';
 
         // When I create a new model called 'Animal'.
         $this->runArtisanCommand(GenerateResource::class, [
@@ -177,10 +159,7 @@ class ResourceGeneratorTest extends \TestCase
             'age', 'colour'
         ], $instance->getHidden());
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path($model . '.php'));
-        $this->removeCreatedFile(database_path('migrations/date_create_'. strtolower(Str::plural($model)).'_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
@@ -200,19 +179,16 @@ class ResourceGeneratorTest extends \TestCase
 
         $this->seeInConsoleOutput('Created migration date_create_chimps_table.php', $console);
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path($model . '.php'));
-        $this->removeCreatedFile(database_path('/migrations/' . $expectedFileName));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
     public function it_names_the_migration_correctly()
     {
-        $model = $this->generateRandomClassName();
+        $model = 'Hippo';
 
         // When I create the following model
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $model,]);
+        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
 
         // Then the a migration called yyyy_mm_dd_hhmmss_create_models_table.php is created.
         $migrationFile =
@@ -225,10 +201,7 @@ class ResourceGeneratorTest extends \TestCase
             database_path('migrations/' . $migrationFile)
         );
 
-        // Clear up files created in the test
-        $this->removeCreatedFile(app_path($model . '.php'));
-        $this->removeCreatedFile(database_path('/migrations/' . $migrationFile));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
@@ -254,9 +227,7 @@ class ResourceGeneratorTest extends \TestCase
             database_path('migrations/' . $migrationFile)
         );
 
-        $this->removeCreatedFile(app_path('Monkey.php'));
-        $this->removeCreatedFile(database_path('/migrations/date_create_monkeys_table.php'));
-        $this->resetRoutes();
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
@@ -292,16 +263,13 @@ class ResourceGeneratorTest extends \TestCase
             'attributes' => 'name:string,100,fillable|age:integer,unsigned,index,hidden|colour:string,nullable,hidden|nickname',
         ]);
 
-        $this->removeCreatedFile(app_path('Badger.php'));
-        $this->resetRoutes();
-
         // Then I see the migration file contains the following:
         $this->seeInFile(
             file_get_contents(base_path('tests/stubs/date_create_badgers_table.stub')),
             database_path('migrations/date_create_badgers_table.php')
         );
 
-        $this->removeCreatedFile(database_path('/migrations/date_create_badgers_table.php'));
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
@@ -313,10 +281,6 @@ class ResourceGeneratorTest extends \TestCase
         // When I create a resource for Tiger.
         $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
 
-        $this->removeCreatedFile(app_path('Tiger.php'));
-        $this->removeCreatedFile(database_path('/migrations/date_create_tigers_table.php'));
-        $this->resetRoutes();
-
         // Then I see there is a new controller called TigerController.php
         $this->seeFileWasCreated(app_path('Http/Controllers/TigerController.php'));
 
@@ -326,7 +290,7 @@ class ResourceGeneratorTest extends \TestCase
             file_get_contents(app_path('Http/Controllers/TigerController.php'))
         );
 
-        $this->removeCreatedFile(app_path('Http/Controllers/TigerController.php'));
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
@@ -344,30 +308,40 @@ class ResourceGeneratorTest extends \TestCase
             app_path('Http/routes.php')
         );
 
-        $this->removeCreatedFile(app_path('Snake.php'));
-        $this->removeCreatedFile(database_path('/migrations/date_create_snakes_table.php'));
-        $this->resetRoutes();
-
+        $this->clearGeneratedFiles($model);
     }
 
     /** @test */
-    public function it_creates_a_model_factory_for_the_model()
+    public function it_creates_a_model_factory()
     {
         // Given there is a model called 'Elephant'
         $model = 'Elephant';
 
         // When I create a resource for Elephant.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
+        $this->runArtisanCommand(GenerateResource::class, [
+            'name' => $model,
+            'attributes' => 'name:string,100,fillable|age:integer,unsigned,index,hidden|colour:string,nullable,hidden|nickname',
+        ]);
 
         // Then a model factory is created for Elephant.
         $this->seeInFile(
             file_get_contents(base_path('tests/stubs/factory.stub')),
-            file_get_contents(database_path('factories/ModelFactory.php'))
+            database_path('factories/ModelFactory.php')
         );
 
-        $this->removeCreatedFile(app_path('Snake.php'));
-        $this->removeCreatedFile(database_path('/migrations/date_create_snakes_table.php'));
+        $this->clearGeneratedFiles($model);
+    }
+
+    private function clearGeneratedFiles($class)
+    {
+        $class = ucfirst($class);
+
+        $this->removeCreatedFile(app_path($class . '.php'));
+        $this->removeCreatedFile(app_path('Http/Controllers/' . $class . 'Controller.php'));
+        $this->removeCreatedFile(database_path('/migrations/date_create_' . strtolower($class) . 's_table.php'));
+
         $this->resetRoutes();
+        $this->resetModelFactories();
     }
 
     private function resetRoutes()
@@ -378,9 +352,12 @@ class ResourceGeneratorTest extends \TestCase
         );
     }
 
-    private function generateRandomClassName()
+    private function resetModelFactories()
     {
-        return 'Animal' . uniqid();
+        file_put_contents(
+            database_path('factories/ModelFactory.php'),
+            file_get_contents(base_path('tests/stubs/ModelFactory.stub'))
+        );
     }
 
     /**

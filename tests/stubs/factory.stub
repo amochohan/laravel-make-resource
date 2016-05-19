@@ -1,0 +1,11 @@
+
+// Elephant model factory
+
+$factory->define(App\Elephant::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->words(2, true),
+        'age' => $faker->randomNumber(),
+        'colour' => $faker->words(2, true),
+        'nickname' => $faker->words(2, true),
+    ];
+});

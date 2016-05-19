@@ -46,6 +46,11 @@ class GenerateResource extends Command
         'timestamps', 'rememberToken',
     ];
 
+    private $fakerMethods = [
+        'string' => ['method' => 'words', 'parameters' => '2, true'],
+        'integer' => ['method' => 'randomNumber', 'parameters' => ''],
+    ];
+
     /**
      * @var array $columnProperties Properties that can be applied to a table column.
      */
@@ -79,11 +84,56 @@ class GenerateResource extends Command
 
         $this->createModel($name);
 
-        $this->attemptToCreateMigration($name);
+        $this->createMigration($name);
 
-        $this->attemptToAddController($name);
+        $this->createController($name);
 
-        $this->attemptToAddRoutes($name);
+        $this->appendRoutes($name);
+
+        $this->createModelFactory($name);
+    }
+
+    private function createModelFactory($name)
+    {
+        $model = $this->modelName($name);
+
+        $stub = $this->files->get(app_path('Stubs/factory.stub'));
+
+        $stub = str_replace('CLASSNAME', $model, $stub);
+
+        $class = 'App\\' . $model;
+        $model = new $class;
+
+        $stub = str_replace(
+            'ATTRIBUTES',
+            $this->buildFakerAttributes($model->migrationAttributes()),
+            $stub
+        );
+
+        $this->files->append(database_path('factories/ModelFactory.php'), $stub);
+
+        $this->info('Created model factory');
+
+        return true;
+    }
+
+    public function buildFakerAttributes($attributes)
+    {
+        $faker = '';
+
+        foreach ($attributes as $attribute) {
+
+            $formatter =
+                $this->fakerMethods[$this->getFieldTypeFromProperties($attribute['properties'])];
+
+            $method = $formatter['method'];
+            $parameters = $formatter['parameters'];
+
+            $faker .= "'".$attribute['name']."' => \$faker->".$method."(".$parameters.")," . PHP_EOL . '        ';
+
+        }
+
+        return rtrim($faker);
     }
 
     /**
@@ -112,7 +162,7 @@ class GenerateResource extends Command
         return true;
     }
 
-    private function attemptToCreateMigration($name)
+    private function createMigration($name)
     {
         $filename = $this->buildMigrationFilename($name);
 
@@ -137,7 +187,7 @@ class GenerateResource extends Command
         return true;
     }
 
-    private function attemptToAddController($modelName)
+    private function createController($modelName)
     {
         $filename = ucfirst($modelName) . 'Controller.php';
 
@@ -159,7 +209,7 @@ class GenerateResource extends Command
         return true;
     }
 
-    private function attemptToAddRoutes($modelName)
+    private function appendRoutes($modelName)
     {
         $modelTitle = ucfirst($modelName);
 
