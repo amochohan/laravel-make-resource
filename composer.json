@@ -27,7 +27,8 @@
     },
     "autoload-dev": {
       "psr-4": {
-        "DrawMyAttention\\ResourceGenerator\\": ["src/", "tests/"]
+        "DrawMyAttention\\ResourceGenerator\\": ["src/", "tests/"],
+        "App\\": "tests/generated/app/"
       }
     }
 }
