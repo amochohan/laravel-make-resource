@@ -19,7 +19,13 @@ so decided to build a single command which can generate:
 
 ## Installation
 
-To do
+Register the command class in app\Console\Kernel.php by adding:
+
+    Commands\GenerateResource::class,
+    
+to the ```$commands``` array.    
+
+
 
 ## Using the generator
 

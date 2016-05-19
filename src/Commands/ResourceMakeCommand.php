@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace DrawMyAttention\ResourceGenerator\Commands;
 
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
@@ -97,7 +97,7 @@ class GenerateResource extends Command
     {
         $model = $this->modelName($name);
 
-        $stub = $this->files->get(app_path('Stubs/factory.stub'));
+        $stub = $this->files->get(__DIR__ . '/../Stubs/factory.stub');
 
         $stub = str_replace('CLASSNAME', $model, $stub);
 
@@ -196,7 +196,7 @@ class GenerateResource extends Command
             return false;
         }
 
-        $stub = $this->files->get(app_path('Stubs/controller.stub'));
+        $stub = $this->files->get(__DIR__ . '/../Stubs/controller.stub');
 
         $stub = str_replace('MyModelClass', ucfirst($modelName), $stub);
         $stub = str_replace('myModelInstance', Str::camel($modelName), $stub);
@@ -215,7 +215,7 @@ class GenerateResource extends Command
 
         $modelName = strtolower($modelName);
 
-        $newRoutes = $this->files->get(app_path('Stubs/routes.stub'));
+        $newRoutes = $this->files->get(__DIR__ . '/../Stubs/routes.stub');
 
         $newRoutes = str_replace('|MODEL_TITLE|', $modelTitle, $newRoutes);
 
@@ -233,7 +233,7 @@ class GenerateResource extends Command
 
     protected function buildMigration($name)
     {
-        $stub = $this->files->get(app_path('/Stubs/migration.stub'));
+        $stub = $this->files->get(__DIR__ . '/../Stubs/migration.stub');
 
         $className = 'Create' . Str::plural($name). 'Table';
 
@@ -253,7 +253,7 @@ class GenerateResource extends Command
 
     protected function buildModel($name)
     {
-        $stub = $this->files->get(app_path('/Stubs/model.stub'));
+        $stub = $this->files->get(__DIR__ . '/../Stubs/model.stub');
 
         $stub = $this->replaceClassName($name, $stub);
 
