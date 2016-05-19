@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace DrawMyAttention\ResourceGenerator\Commands;
 
 use Illuminate\Support\Str;
 
@@ -28,10 +28,10 @@ class ResourceGeneratorTest extends \TestCase
     public function it_does_not_overwrite_an_existing_model()
     {
         // Given there is an existing model called 'Animal'.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => 'Animal']);
+        $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => 'Animal']);
 
         // And I try to create another model named 'Animal'.
-        $console = $this->runArtisanCommand(GenerateResource::class, ['name' => 'Animal']);
+        $console = $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => 'Animal']);
 
         // Then I see an error
         $this->seeInConsoleOutput('Model already exists!', $console);
@@ -43,7 +43,7 @@ class ResourceGeneratorTest extends \TestCase
     public function it_creates_a_model_with_the_correct_class_name()
     {
         // When I create a new model called 'Animal'.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => 'Animal']);
+        $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => 'Animal']);
 
         // Then the model is created and the model has the correct class name
         $this->seeInFile('class Animal', app_path('/Animal.php'));
@@ -57,7 +57,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Animal';
 
         // When I create a new model called 'Animal'.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
+        $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => $model]);
 
         // Then I can instantiate the created Animal model
         $class = 'App\\' . $model;
@@ -69,7 +69,7 @@ class ResourceGeneratorTest extends \TestCase
     /** @test */
     public function it_splits_a_pipe_separated_list_of_attributes_to_an_array_of_attributes()
     {
-        $command = $this->app->make(GenerateResource::class);
+        $command = $this->app->make(ResourceMakeCommand::class);
         $attributes = $command->parseAttributesFromInputString('name:string,100|age:integer,unsigned,index|colour:string,20,nullable|nickname');
         $this->assertEquals([
             'name' => ['string', '100'],
@@ -83,7 +83,7 @@ class ResourceGeneratorTest extends \TestCase
     /** @test */
     public function it_converts_a_php_array_to_a_string_representation_that_can_be_used_to_inject_to_a_template()
     {
-        $command = $this->app->make(GenerateResource::class);
+        $command = $this->app->make(ResourceMakeCommand::class);
 
         $string = $command->convertArrayToString(
             $command->parseAttributesFromInputString(
@@ -101,7 +101,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Koala';
 
         // When I create a new model called 'Animal'.
-        $this->runArtisanCommand(GenerateResource::class, [
+        $this->runArtisanCommand(ResourceMakeCommand::class, [
             'name' => $model,
             'attributes' => 'name:string,100|age:integer,unsigned,index|colour:string,20,nullable|nickname',
         ]);
@@ -126,7 +126,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Penguin';
 
         // When I create a new model called 'Animal'.
-        $this->runArtisanCommand(GenerateResource::class, [
+        $this->runArtisanCommand(ResourceMakeCommand::class, [
             'name' => $model,
             'attributes' => 'name:string,100,fillable|age:integer,fillable|colour:string|nickname',
         ]);
@@ -147,7 +147,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Dog';
 
         // When I create a new model called 'Animal'.
-        $this->runArtisanCommand(GenerateResource::class, [
+        $this->runArtisanCommand(ResourceMakeCommand::class, [
             'name' => $model,
             'attributes' => 'name:string,100,fillable|age:integer,hidden|colour:string,hidden|nickname',
         ]);
@@ -168,7 +168,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Chimp';
 
         // When I create the following model
-        $console = $this->runArtisanCommand(GenerateResource::class, ['name' => $model,]);
+        $console = $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => $model,]);
 
         // Then the a migration called yyyy_mm_dd_hhmmss_create_models_table.php is created.
         $expectedFileName = 'date_create_chimps_table.php';
@@ -188,7 +188,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Hippo';
 
         // When I create the following model
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
+        $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => $model]);
 
         // Then the a migration called yyyy_mm_dd_hhmmss_create_models_table.php is created.
         $migrationFile =
@@ -211,7 +211,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Monkey';
 
         // When I generate the migration for the model.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
+        $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => $model]);
 
         // Then the table name should be 'monkeys'.
         $migrationFile =
@@ -242,7 +242,7 @@ class ResourceGeneratorTest extends \TestCase
         ];
 
         // When I convert these to Schema Builder columns
-        $columns = $this->app->make(GenerateResource::class)->buildTableColumns($attributes);
+        $columns = $this->app->make(ResourceMakeCommand::class)->buildTableColumns($attributes);
 
         // Then I see the following
         $this->assertEquals(
@@ -258,7 +258,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Badger';
 
         // When I create a model with the following parameters:
-        $this->runArtisanCommand(GenerateResource::class, [
+        $this->runArtisanCommand(ResourceMakeCommand::class, [
             'name' => $model,
             'attributes' => 'name:string,100,fillable|age:integer,unsigned,index,hidden|colour:string,nullable,hidden|nickname',
         ]);
@@ -279,7 +279,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Tiger';
 
         // When I create a resource for Tiger.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
+        $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => $model]);
 
         // Then I see there is a new controller called TigerController.php
         $this->seeFileWasCreated(app_path('Http/Controllers/TigerController.php'));
@@ -300,7 +300,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Snake';
 
         // When I create a resource for Snake.
-        $this->runArtisanCommand(GenerateResource::class, ['name' => $model]);
+        $this->runArtisanCommand(ResourceMakeCommand::class, ['name' => $model]);
 
         // Then the App\Http\routes.php file contains new routes for the model.
         $this->seeInFile(
@@ -318,7 +318,7 @@ class ResourceGeneratorTest extends \TestCase
         $model = 'Elephant';
 
         // When I create a resource for Elephant.
-        $this->runArtisanCommand(GenerateResource::class, [
+        $this->runArtisanCommand(ResourceMakeCommand::class, [
             'name' => $model,
             'attributes' => 'name:string,100,fillable|age:integer,unsigned,index,hidden|colour:string,nullable,hidden|nickname',
         ]);
