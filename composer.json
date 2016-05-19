@@ -16,13 +16,18 @@
         "illuminate/filesystem": "5.2.*"
     },
     "require-dev": {
-        "laravel/framework": "5.2.*",
         "mockery/mockery": "0.9.*",
+        "orchestra/testbench": "~3.0",
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
         "psr-4": {
             "DrawMyAttention\\ResourceGenerator\\": "src/"
         }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "DrawMyAttention\\ResourceGenerator\\": ["src/", "tests/"]
+      }
     }
 }
