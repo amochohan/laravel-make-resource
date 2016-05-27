@@ -49,6 +49,7 @@ class ResourceMakeCommand extends Command
     private $fakerMethods = [
         'string' => ['method' => 'words', 'parameters' => '2, true'],
         'integer' => ['method' => 'randomNumber', 'parameters' => ''],
+        'float' => ['method' => 'randomFloat', 'parameters' => ''],
     ];
 
     /**
