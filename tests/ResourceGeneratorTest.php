@@ -152,6 +152,27 @@ class ResourceGeneratorTest extends TestCase
     }
 
     /** @test */
+    public function it_accepts_float_attributes_which_are_saved_to_the_model()
+    {
+        $model = 'Louse';
+
+        // When I create a new model called 'Animal'.
+        $this->runArtisanCommand(ResourceMakeCommand::class, [
+            'name' => $model,
+            'attributes' => 'eyes:float',
+        ]);
+
+        // Then the model is created and the model has the correct namespace
+        $instance = $this->createClassInstance($model);
+
+        $this->assertEquals([
+            ['name' => 'eyes', 'properties' => ['float']],
+        ], $instance->migrationAttributes());
+
+        $this->clearGeneratedFiles($model);
+    }
+
+    /** @test */
     public function it_adds_attributes_that_are_tagged_as_fillable_to_the_fillable_attributes_array()
     {
         $model = 'Penguin';
